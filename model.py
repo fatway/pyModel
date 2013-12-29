@@ -719,12 +719,20 @@
     list.remove()       # 删除类别的成员
     list.reverse()      # 将列表中成员的顺序颠倒
     list.sort()         # 将列表中成员排序
-    
+
     # 列表推导式
     lst = [1,2,3,4,5,6,7,8]
-	lst_mod = [i for i in lst if i%2==0]
-	# [2,4,6,8]
-    
+    lst_mod = [i*2 for i in lst if i%2==0]
+    # [4,8,12,16]
+    L[:] = [min(x,100) for x in L]  # 将L中大于100的数置为100
+
+    # 列表拷贝
+    L1 = list(L)  # L1 = copy.copy(L)
+    L1 = L  # 只是引用了相同的内存地址
+
+    # 大列表取元素考虑用生成器
+    total = sum(x+23 for x in thelist if x>5)
+
     # 排列组合
     a = ['a','b','c']
     b= ['d','e','f']
@@ -739,22 +747,29 @@
     b f
     c d
     c e
-    c f    
+    c f
     '''
-    
+
     # 列表再分组
     org = ['a','b','c','d','e','f','g','h','i','g','k']
     rst = [org[i:i+3] for i in range(0,len(org),3)]
     # [['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i'], ['g', 'k']]
-    
+
 	# 序列化列表
-	for sn, value in enumerate(org):
-		print sn, value
-	#>>> 0, 'a'
-	#>>> 1, 'b'
-	#>>> 2, 'c'
-	#>>> ...
-    
+    for sn, value in enumerate(org):
+        print sn, value
+    #>>> 0, 'a'
+    #>>> 1, 'b'
+    #>>> 2, 'c'
+    #>>> ...
+
+    # 矩阵转换
+    arr = [[1,2,3], [4,5,6], [7,8,9], [10,11,12]]
+    arrV = [[r[col] for r in arr] for col in range(len(arr[0]))]
+    # [[1,4,7,10],[2,5,8,11],[3,6,9,12]]
+    map(list, zip(*arr))  # pythonic 同样的结果
+
+    ## 字典操作
     dic.clear()         # 清空字典
     dic.copy()          # 复制字典
     dic.get(k)          # 获得键k的值
@@ -764,6 +779,40 @@
     dic.values()        # 获得值的列表
     dic.pop(k)          # 删除键k
     dic.update()        # 更新成员
+
+    dic.get(k, defaultvalue) # key不存在时取默认值
+
+    # 给字典增加条目
+    # theIndex={ word: [], }
+    def addword(theIndex, word, pagenumber):
+        if word in theIndex:
+            theIndex[word].append(pagenumber)
+        else:
+            theIndex[word] = [pagenumber]
+    # pythonic 的方法（setdefault）
+    def addword(theIndex, word, pagenumber):
+        theIndex.setdefault(word,[]).append(pagenumber)
+
+    # 创建dict
+    data = dict(red=1,green=2,blue=3)
+    # data = { 'red': 1, 'green': 2, 'blue': 3 }
+    dict.fromkeys( ) # TODO: ???
+
+    # 反转字典
+    data = dict([(v,k) for k,v in d.iteritems()])
+
+    # 计算字典的交集和并集
+    a = dict.fromkeys(xrange(1000))
+    b = dict.fromkeys(xrange(500, 1500))
+    union = dict(a, **b)  # 并集
+    union = dict.fromkeys([x for x in a if x not in b])  # 并集
+    inter = dict.fromkeys([x for x in a if x in b])  # 交集
+        # len(a) < len(b) 时上面的方法在性能上更优
+
+    a = set(xrange(1000))
+    b = set(xrange(500,1500))
+    union = a | b
+    inter = a & b
 
 17. 文件和目录操作
     import os
@@ -1705,30 +1754,30 @@
     execfile(filename [,globals [,locals ]])函数可以用来执行一个文件,看下面的例子:
         >>> eval_r('3+4')
         7
-        >>> exec 'a=100' 
-        >>> a 
-        100 
+        >>> exec 'a=100'
+        >>> a
+        100
         >>> execfile(r'd:\code\ex\test.py')
         hello world!
         >>>
 
-    默认的，eval_r(),exec,execfile()所运行的代码都位于当前的名字空间中. 
+    默认的，eval_r(),exec,execfile()所运行的代码都位于当前的名字空间中.
     eval_r(), exec 和 execfile()函数也可以接受一个或两个可选字典参数作为代码执行的全局名字空间和局部名字空间. 例如:
         1  globals = {'x': 7,
         2             'y': 10,
         3             'birds': ['Parrot', 'Swallow', 'Albatross']
         4            }
         5  locals = { }
-        6  
-        7  # 将上边的字典作为全局和局部名称空间 
-        8  a = eval("3*x + 4*y", globals, locals) 
-        9  exec "for b in birds: print b" in globals, locals # 注意这里的语法 
+        6
+        7  # 将上边的字典作为全局和局部名称空间
+        8  a = eval("3*x + 4*y", globals, locals)
+        9  exec "for b in birds: print b" in globals, locals # 注意这里的语法
         10 execfile("foo.py", globals, locals)
     如果你省略了一个或者两个名称空间参数,那么当前的全局和局部名称空间就被使用.
     如果一个函数体内嵌嵌套函数或lambda匿名函数时,同时又在函数主体中使用exec或execfile()函数时，
     由于牵到嵌套作用域，会引发一个SyntaxError异常.
 
-    注意例子中exec语句的用法和eval_r(), execfile()是不一样的. 
+    注意例子中exec语句的用法和eval_r(), execfile()是不一样的.
     exec是一个语句(就象print或while), 而eval_r()和execfile()则是内建函数.
     exec(str) 这种形式也被接受，但是它没有返回值。
 
@@ -1736,14 +1785,14 @@
     这个过程比较耗时,所以如果需要对某段代码执行很多次时,最好还是对该代码先进行预编译,
     这样就不需要每次都编译一遍代码，可以有效提高程序的执行效率。
 
-    compile(str ,filename ,kind )函数将一个字符串编译为字节代码, 
-    str是将要被编译的字符串, 
+    compile(str ,filename ,kind )函数将一个字符串编译为字节代码,
+    str是将要被编译的字符串,
     filename是定义该字符串变量的文件，
-    kind参数指定了代码被编译的类型-- 'single'指单个语句, 'exec'指多个语句, 'eval'指一个表达式. 
+    kind参数指定了代码被编译的类型-- 'single'指单个语句, 'exec'指多个语句, 'eval'指一个表达式.
 
     compile()函数返回一个代码对象，该对象当然也可以被传递给eval_r()函数和exec语句来执行,例如:
         >>> str = 'for i in range(0, 10): print i'
-        >>> c = compile(str,'','exec')      # 编译为字节代码对象 
+        >>> c = compile(str,'','exec')      # 编译为字节代码对象
         >>> exec c        # 执行
         0
         1
@@ -1756,13 +1805,13 @@
         8
         9
         >>> str2 = '3*6 + 4*8'
-        >>> c2 = compile(str2,'','eval')        # 编译为表达式 
+        >>> c2 = compile(str2,'','eval')        # 编译为表达式
         >>> result = eval_r(c2)                 # 执行
         >>> result
         50
         >>>
 
-35. 
+35.
 
 
 
