@@ -721,7 +721,9 @@
     list.sort()         # 将列表中成员排序
     
     # 列表推导式
-    # TODO
+    lst = [1,2,3,4,5,6,7,8]
+	lst_mod = [i for i in lst if i%2==0]
+	# [2,4,6,8]
     
     # 排列组合
     a = ['a','b','c']
@@ -745,6 +747,13 @@
     rst = [org[i:i+3] for i in range(0,len(org),3)]
     # [['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i'], ['g', 'k']]
     
+	# 序列化列表
+	for sn, value in enumerate(org):
+		print sn, value
+	#>>> 0, 'a'
+	#>>> 1, 'b'
+	#>>> 2, 'c'
+	#>>> ...
     
     dic.clear()         # 清空字典
     dic.copy()          # 复制字典
