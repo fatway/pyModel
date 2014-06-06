@@ -8,6 +8,39 @@
 '''工作中实际用到的运行于生产的代码模块
 '''
 
+#----------------------------------------------------------------------------
+#  面试题，抓取CSDN首页中间的消息列表，2013-11-07
+#----------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+
+import urllib2
+import re
+from bs4 import BeautifulSoup
+
+fp = urllib2.urlopen(r"http://www.csdn.net")
+htmlSource = fp.read()
+fp.close()
+
+#print htmlSource[:30]
+
+###
+soup = BeautifulSoup(htmlSource)
+news_list = soup.findAll(attrs={"class": "news_list"})[0]
+
+#print news_list
+
+###
+lists = news_list.findAll("a")
+
+
+num = 0
+for lst in lists:
+    num = num + 1
+    print num
+    print lst['title']
+    print lst['href']
+    print
+
 
 #----------------------------------------------------------------------------
 #  不太适应这个作息时间，做个休息提醒 2013-11-12
