@@ -542,6 +542,9 @@
     m.group('Area')  # 'www'
     m.group(1)  # 'www'
     m.groups()  # ('www', 'python')
+    # 替换组/或者保留组
+    re.sub(r"u'(?P<1>\(?\d+-\d+\)?)'", r'"\g<1>"', txt)
+
 
 12. py2exe
     # -*- coding:utf-8 -*-
@@ -792,6 +795,16 @@
     # pythonic 的方法（setdefault）
     def addword(theIndex, word, pagenumber):
         theIndex.setdefault(word,[]).append(pagenumber)
+    # 还可以使用内建库来设定一对多
+    from collections import defaultdict
+    d = defaultdict(list)
+    d['a'].append(1)
+    d['a'].append(2)
+    d['b'].append(4)
+    s = defaultdict(set)
+    s['a'].add(1)
+    s['a'].add(2)
+    s['b'].add(4)
 
     # 创建dict
     data = dict(red=1,green=2,blue=3)
